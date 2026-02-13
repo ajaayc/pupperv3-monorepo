@@ -10,7 +10,7 @@ from livekit.agents.llm import function_tool
 
 import logging
 
-from livekit.plugins import cartesia, openai, google, deepgram, silero
+from livekit.plugins import cartesia, openai, google, deepgram, silero, elevenlabs
 from livekit.agents import UserInputTranscribedEvent
 from openai.types.beta.realtime.session import TurnDetection
 import subprocess
@@ -198,6 +198,22 @@ def openairealtime_cartesia_session():
         tts=cartesia.TTS(voice="e7651bee-f073-4b79-9156-eff1f8ae4fd9", model="sonic-3"),
     )
 
+def openairealtime_elevenlabs_session():
+    return AgentSession(
+        llm=openai.realtime.RealtimeModel(
+            modalities=["text"],
+            model="gpt-realtime",
+            turn_detection=TurnDetection(
+                type="server_vad",
+                threshold=0.7,
+                prefix_padding_ms=200,
+                silence_duration_ms=100,
+                create_response=True,
+                interrupt_response=True,
+            ),
+        ),
+        tts=elevenlabs.TTS(voice_id="3wYkoNxcpCEbQxxmHDX2", model="eleven_flash_v2_5"),
+    )
 
 def gemini_cartesia_session():
     return AgentSession(
@@ -222,6 +238,8 @@ def get_pupster_session(agent_design: str):
         return openairealtime_cartesia_session()
     elif agent_design == "openai-realtime":
         return openairealtime_session()
+    elif agent_design == "openai-elevenlabs":
+        return openairealtime_elevenlabs_session()
     else:
         logger.error(f"Unknown agent design {agent_design}")
         raise ValueError(f"Unknown agent design {agent_design}")
