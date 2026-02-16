@@ -31,7 +31,7 @@ logger = logging.getLogger("agent")
 
 
 # AGENT_DESIGN = "cascade"
-#AGENT_DESIGN = "openai-cartesia"
+# AGENT_DESIGN = "openai-cartesia"
 AGENT_DESIGN = "openai-elevenlabs"
 # AGENT_DESIGN = "google-cartesia"
 # AGENT_DESIGN = "openai-realtime"
